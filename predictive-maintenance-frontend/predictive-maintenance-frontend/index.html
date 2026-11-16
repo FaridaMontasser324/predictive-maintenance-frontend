@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Check your machine's health: enter its current readings and get an instant failure risk assessment with a recommended maintenance action.">
+  <title>Predictive Maintenance System</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a1220'/%3E%3Cpath d='M5 17h5l3-8 5 14 3-6h6' fill='none' stroke='%2322d3ee' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Inline SVG icon sprite (no external dependencies) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M2 13h4l2.5-7 4 13 2.5-6H22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-predict" viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 6 1V4.5A2.5 2.5 0 0 0 9 4zM15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-6 1V4.5A2.5 2.5 0 0 1 15 4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sensor" viewBox="0 0 24 24"><path d="M14 14.8V5a2 2 0 1 0-4 0v9.8a4 4 0 1 0 4 0z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9v7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5 5L12 19a2.1 2.1 0 0 1-3-3l7.7-7.7zM14.7 6.3a4 4 0 0 1 5-1.3l-2.6 2.6 1.4 1.4L21 6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5 2.8 19.5h18.4L12 3.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 10v4.5M12 17.2v.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8 12.5 2.8 2.8L16.3 9.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.5 3.1 8.2 7.5 9.5 4.4-1.3 7.5-5 7.5-9.5V6L12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#predict">Skip to prediction form</a>
+
+<div class="app">
+
+  <!-- ============ Sidebar / Navigation ============ -->
+  <aside class="sidebar">
+    <a class="brand" href="#dashboard" aria-label="Predictive Maintenance System – home">
+      <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-logo"/></svg></span>
+      <span class="brand-text"><strong>PredictiveMaint</strong><small>AI failure prediction</small></span>
+    </a>
+
+    <nav class="nav" aria-label="Sections">
+      <a class="nav-link" href="#dashboard" data-section="dashboard"><svg class="icon" aria-hidden="true"><use href="#i-dashboard"/></svg><span>Dashboard</span></a>
+      <a class="nav-link" href="#predict" data-section="predict"><svg class="icon" aria-hidden="true"><use href="#i-predict"/></svg><span>Predict Failure</span></a>
+    </nav>
+
+    <p class="sidebar-foot">Machine health insights</p>
+  </aside>
+
+  <!-- ============ Main content ============ -->
+  <main class="main">
+
+    <!-- Header -->
+    <header class="page-header">
+      <div class="page-header-text">
+        <p class="eyebrow">AI-Powered Machine Failure Prediction</p>
+        <h1>Predictive Maintenance System</h1>
+        <p class="lead">Enter your machine's current readings to get an instant failure risk assessment and a recommended maintenance action.</p>
+      </div>
+    </header>
+
+    <!-- A. Overview -->
+    <section id="dashboard" class="section" aria-labelledby="overview-title">
+      <h2 class="section-title" id="overview-title">Overview</h2>
+
+      <div class="card-grid three">
+        <article class="card feature">
+          <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-brain"/></svg></span>
+          <h3>Failure prediction</h3>
+          <p>See how likely your machine is to fail, based on how it is running right now.</p>
+        </article>
+        <article class="card feature">
+          <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-sensor"/></svg></span>
+          <h3>Simple sensor input</h3>
+          <p>Just six readings: machine type, two temperatures, speed, torque and tool wear.</p>
+        </article>
+        <article class="card feature">
+          <span class="feature-icon"><svg class="icon" aria-hidden="true"><use href="#i-wrench"/></svg></span>
+          <h3>Clear next steps</h3>
+          <p>Every result comes with a risk level and a recommended maintenance action.</p>
+        </article>
+      </div>
+
+    </section>
+
+    <!-- D–F. Form and Results -->
+    <section id="predict" class="section" aria-labelledby="predict-title">
+      <h2 class="section-title" id="predict-title">Predict Failure</h2>
+
+      <div class="predict-grid">
+
+        <!-- Form -->
+        <div class="card form-card">
+          <h3 class="card-title">Machine sensor input</h3>
+          <p class="card-sub">All fields are required. Values must be valid, non-negative numbers.</p>
+
+          <form id="predict-form" novalidate autocomplete="off">
+
+            <fieldset class="group">
+              <legend>Machine</legend>
+              <div class="field" data-field="type">
+                <label for="type">Machine type</label>
+                <select id="type" name="type" required aria-describedby="type-hint type-error">
+                  <option value="">Select type…</option>
+                  <option value="L">L – Low quality variant</option>
+                  <option value="M">M – Medium quality variant</option>
+                  <option value="H">H – High quality variant</option>
+                </select>
+                <p class="hint" id="type-hint">Product quality variant of the machine.</p>
+                <p class="error" id="type-error"></p>
+              </div>
+            </fieldset>
+
+            <fieldset class="group">
+              <legend>Temperatures</legend>
+              <div class="two-col">
+                <div class="field" data-field="air_temperature_k">
+                  <label for="air_temperature_k">Air temperature <span class="unit">K</span></label>
+                  <input id="air_temperature_k" name="air_temperature_k" type="number" inputmode="decimal" step="any" min="0" required placeholder="e.g. 298.1" aria-describedby="air_temperature_k-hint air_temperature_k-error">
+                  <p class="hint" id="air_temperature_k-hint">Ambient air temperature in Kelvin.</p>
+                  <p class="error" id="air_temperature_k-error"></p>
+                </div>
+                <div class="field" data-field="process_temperature_k">
+                  <label for="process_temperature_k">Process temperature <span class="unit">K</span></label>
+                  <input id="process_temperature_k" name="process_temperature_k" type="number" inputmode="decimal" step="any" min="0" required placeholder="e.g. 308.6" aria-describedby="process_temperature_k-hint process_temperature_k-error">
+                  <p class="hint" id="process_temperature_k-hint">Temperature of the machining process in Kelvin.</p>
+                  <p class="error" id="process_temperature_k-error"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="group">
+              <legend>Mechanical load</legend>
+              <div class="three-col">
+                <div class="field" data-field="rotational_speed_rpm">
+                  <label for="rotational_speed_rpm">Rotational speed <span class="unit">RPM</span></label>
+                  <input id="rotational_speed_rpm" name="rotational_speed_rpm" type="number" inputmode="decimal" step="any" min="0" required placeholder="e.g. 1550" aria-describedby="rotational_speed_rpm-hint rotational_speed_rpm-error">
+                  <p class="hint" id="rotational_speed_rpm-hint">Spindle speed, revolutions per minute.</p>
+                  <p class="error" id="rotational_speed_rpm-error"></p>
+                </div>
+                <div class="field" data-field="torque_nm">
+                  <label for="torque_nm">Torque <span class="unit">Nm</span></label>
+                  <input id="torque_nm" name="torque_nm" type="number" inputmode="decimal" step="any" min="0" required placeholder="e.g. 42.5" aria-describedby="torque_nm-hint torque_nm-error">
+                  <p class="hint" id="torque_nm-hint">Torque applied, in newton-metres.</p>
+                  <p class="error" id="torque_nm-error"></p>
+                </div>
+                <div class="field" data-field="tool_wear_min">
+                  <label for="tool_wear_min">Tool wear <span class="unit">min</span></label>
+                  <input id="tool_wear_min" name="tool_wear_min" type="number" inputmode="decimal" step="any" min="0" required placeholder="e.g. 120" aria-describedby="tool_wear_min-hint tool_wear_min-error">
+                  <p class="hint" id="tool_wear_min-hint">Minutes the tool has been in use.</p>
+                  <p class="error" id="tool_wear_min-error"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="form-actions">
+              <button type="submit" class="btn primary" id="submit-btn">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-label" id="submit-label">Predict Failure</span>
+              </button>
+              <button type="button" class="btn ghost" id="reset-btn">Reset</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Results -->
+        <div class="card result-card" id="result-card" data-state="empty" aria-labelledby="result-title" aria-busy="false">
+          <h3 class="card-title" id="result-title" tabindex="-1">Prediction result</h3>
+
+          <!-- Empty -->
+          <div class="state state-empty">
+            <span class="state-icon"><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg></span>
+            <p class="state-title">No prediction yet</p>
+            <p class="state-text">Fill in the sensor readings and press <strong>Predict Failure</strong>. Your result will appear here.</p>
+          </div>
+
+          <!-- Loading -->
+          <div class="state state-loading" role="status" aria-live="polite">
+            <span class="loader" aria-hidden="true"></span>
+            <p class="state-title">Requesting prediction…</p>
+            <p class="state-text">Analysing your readings. This can take a few seconds.</p>
+          </div>
+
+          <!-- Error -->
+          <div class="state state-error" role="alert">
+            <span class="state-icon danger"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg></span>
+            <p class="state-title" id="error-title">Prediction failed</p>
+            <p class="state-text" id="error-message"></p>
+            <p class="state-text subtle">Your input values have been kept. You can adjust them or try again.</p>
+          </div>
+
+          <!-- Success -->
+          <div class="state state-success" id="result-body" aria-live="polite">
+            <div class="result-top">
+              <div class="gauge" id="gauge">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="gauge-track" cx="60" cy="60" r="52"/>
+                  <circle class="gauge-fill" id="gauge-fill" cx="60" cy="60" r="52" transform="rotate(-90 60 60)"/>
+                </svg>
+                <div class="gauge-center">
+                  <span class="gauge-value" id="probability-value">–</span>
+                  <span class="gauge-label">Failure probability</span>
+                </div>
+              </div>
+
+              <div class="result-badges">
+                <div class="result-item">
+                  <span class="result-label">Prediction status</span>
+                  <span class="badge" id="status-badge"><svg class="icon" aria-hidden="true"><use id="status-icon" href="#i-check"/></svg><span id="status-value">–</span></span>
+                </div>
+                <div class="result-item">
+                  <span class="result-label">Risk level</span>
+                  <span class="badge" id="risk-badge"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span id="risk-value">–</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Probability scale -->
+            <div class="scale" aria-hidden="true">
+              <div class="scale-track">
+                <span class="scale-marker" id="scale-marker"></span>
+              </div>
+              <div class="scale-ticks"><span>0%</span><span>40%</span><span>70%</span><span>100%</span></div>
+              <div class="scale-legend"><span class="lg low">Low &lt; 40%</span><span class="lg medium">Medium 40–70%</span><span class="lg high">High ≥ 70%</span></div>
+            </div>
+
+            <div class="action-box">
+              <span class="result-label">Recommended action</span>
+              <p class="action-value" id="action-value">–</p>
+            </div>
+
+            <div class="explain">
+              <p id="explain-text"></p>
+              <p class="subtle">Status and risk level are two separate measures, so they can differ — for example, a predicted failure can still carry a MEDIUM risk level.</p>
+              <p class="subtle">This is an automated estimate based on the readings you entered, not a guarantee about the machine's actual condition.</p>
+            </div>
+
+            <details class="inputs-used">
+              <summary>Submitted sensor values</summary>
+              <dl id="inputs-list"></dl>
+            </details>
+            <p class="timestamp" id="result-time"></p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <footer class="footer">
+      <p>Predictive Maintenance System · Results are decision support and do not replace qualified engineering judgement.</p>
+    </footer>
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
